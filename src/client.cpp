@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include "server.h"
+#include "file.h"
+namespace oe {
 
 class OEClientPrivate {
 public:
@@ -11,7 +13,7 @@ public:
 
 
 private:
-
+    std::list<OEFile> listFile_;
     int version_;
 };
 
@@ -19,7 +21,7 @@ private:
 OEClient::OEClient()
     :d_ptr(new OEClientPrivate())
 {
-    // 获取当前版本
+    // get current version
 }
 
 int OEClient::setVersion(int _version)
@@ -31,10 +33,24 @@ int OEClient::setVersion(int _version)
 
 int OEClient::getVersion() const
 {
+    const OEClientPrivate* const d = d_func();
+    return d->version_;
+}
+
+int OEClient::update()
+{
     return 0;
+}
+
+std::list<OEFile> OEClient::getAllFile()
+{
+    Q_D(OEClient);
+    return d->listFile_;
 }
 
 bool OEClient::operator ==(const OEServer &_ser)
 {
     return _ser.getVersion() == this->getVersion();
+}
+
 }

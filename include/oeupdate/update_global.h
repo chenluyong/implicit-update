@@ -1,6 +1,8 @@
 #ifndef OELIB_UPDATE_GLOBAL_H
 #define OELIB_UPDATE_GLOBAL_H
 
+#include "update_define.h"
+
 #if defined(OEUPDATE_LIBRARY)
 #  define OEUPDATESHARED_EXPORT __declspec(dllexport)
 #else
@@ -27,7 +29,7 @@
 #define Q_D(Class) Class##Private * const d = d_func()
 #endif
 #ifndef Q_Q
-#define Q_Q(Class) Class * const q = q_func()
+#define Q_Q(Class) Class * q = q_func()
 #endif
 
 

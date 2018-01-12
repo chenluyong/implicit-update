@@ -3,6 +3,7 @@
 #include <client.h>
 #include <server.h>
 
+using namespace oe;
 
 int main(void) {
     OEUpdate u;
@@ -15,8 +16,8 @@ int main(void) {
     }
     else {
         u.update();
+        u.asynUpdate();
     }
-    std::cout << OE_VERSION(1,1,1,1) << std::endl;
     system("pause");
     return 0;
 }

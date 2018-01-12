@@ -3,6 +3,8 @@
 
 #include "update_global.h"
 
+namespace oe {
+
 class OEServer;
 class OEClient;
 
@@ -18,10 +20,19 @@ public:
     int setClient(OEClient* _clt);
 
     int update(void);
+
+    int asynUpdate(void);
+
+protected:
+
+
+
 private:
+
     OEServer* server_;
     OEClient* client_;
 
 };
 
+}
 #endif // OELIB_UPDATE_H
