@@ -30,13 +30,14 @@ public:
 
     int getVersion(void) const;
 
-    std::list<OEFile> getAllFile(void);
+    const std::list<OEFile> &getAllFile(void);
 
 
 
 public:
 
     bool operator == (const OEClient&  _ser) const ;
+    bool operator != (const OEClient&  _ser) const ;
 
 private:
 

@@ -15,7 +15,7 @@ class OEFile;
 class OEUPDATESHARED_EXPORT OEClient
 {
 public:
-    OEClient();
+    OEClient(void);
 
 
     virtual int update(void);
@@ -26,7 +26,7 @@ public:
 
     int getVersion(void) const;
 
-    std::list<OEFile> getAllFile(void);
+    const std::list<OEFile> &getAllFile(void);
 
 
 
@@ -34,6 +34,7 @@ public:
 public:
 
     bool operator == (const OEServer&  _ser);
+    bool operator != (const OEServer&  _ser);
 
 private:
     friend class OEServer;

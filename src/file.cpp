@@ -4,6 +4,8 @@ namespace oe {
 
 class OEFilePrivate {
 
+    OEFilePrivate(OEFile* _parent)
+        :q_ptr(_parent) {}
 
     Q_DECLARE_PUBLIC(OEFile)
 
@@ -13,48 +15,58 @@ private:
     OEFile::Type type_;
     // file path (if the type is HTTP, the path is URL.)
     std::string path_;
+    // download to local, in software relative path/filename.
+    // example: res/logo.png
+    std::string fileName_;
     // file MD5
     std::string code_;
 };
 
 
-OEFile::OEFile()
+OEFile::OEFile(void)
+    :d_ptr(new OEFilePrivate(this))
 {
-
 }
 
-inline bool OEFile::isValid() const
+bool OEFile::isValid(void) const
 {
     const Q_D(OEFile);
-    return !(d->path_.empty());
+    return !(d->fileName_.empty());
 }
 
-inline const std::string &OEFile::getCode() const
+const std::string &OEFile::getCode(void) const
 {
     const Q_D(OEFile);
     return d->code_;
 }
 
-inline const OEFile::Type &OEFile::getFileType() const
+const OEFile::Type &OEFile::getFileType(void) const
 {
     const Q_D(OEFile);
-    return d->type_;;
+    return d->type_;
 }
 
-inline const std::string &OEFile::getFilePath() const
+
+const std::string &OEFile::getFileName(void) const
+{
+    const Q_D(OEFile);
+    return d->fileName_;
+}
+
+const std::string &OEFile::getNetworkPath() const
 {
     const Q_D(OEFile);
     return d->path_;
 }
 
-inline bool OEFile::operator ==(const OEFile &_file) const
+bool OEFile::operator ==(const OEFile &_file) const
 {
-    return this->getCode() == _file.getCode();
+    return (this->getFileName() == _file.getFileName());
 }
 
-inline bool OEFile::operator !=(const OEFile &_file) const
+bool OEFile::operator !=(const OEFile &_file) const
 {
-    return this->getCode() != _file.getCode();
+    return (this->getFileName() != _file.getFileName());
 }
 
 }

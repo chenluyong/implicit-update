@@ -16,7 +16,7 @@ public:
         LOCAL=2
     };
 
-    OEFile();
+    OEFile(void);
 
     // check file
     bool isValid(void) const;
@@ -25,13 +25,14 @@ public:
 
     const Type &getFileType(void) const;
 
-    const std::string &getFilePath(void) const;
+    const std::string &getFileName(void) const;
 
+    const std::string &getNetworkPath(void) const;
 
 public:
 
-    bool operator ==(const OEFile& _file) const;
-    bool operator !=(const OEFile& _file) const;
+    bool operator ==(const OEFile &_file) const;
+    bool operator !=(const OEFile &_file) const;
 
 private:
 

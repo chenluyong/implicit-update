@@ -6,7 +6,9 @@ namespace oe {
 class OEServerPrivate {
     OEServerPrivate(OEServer* const _parent)
         : q_ptr(_parent){
-
+        ip_ = "127.0.0.1";
+        port_ = 19940;
+        version_ = OE_VERSION(1,1,1,1);
     }
 public:
     Q_DECLARE_PUBLIC(OEServer)
@@ -14,8 +16,8 @@ public:
 
 private:
     std::list<OEFile> listFile_;
-    int version_;
     std::string ip_;
+    int version_;
     int port_;
     // with server connect status.
     bool connectSate_;
@@ -26,10 +28,6 @@ OEServer::OEServer(void)
     : d_ptr(new OEServerPrivate(this))
 {
     // init server ip and port
-    Q_D(OEServer);
-    d->ip_ = "127.0.0.1";
-    d->port_ = 19940;
-    d->version_ = OE_VERSION(1,1,1,1);
 
 }
 
@@ -42,12 +40,12 @@ int OEServer::connect(const std::string& _ip, const int _port)
         std::cout << "\t  IP :" << _ip.c_str() << std::endl;
         std::cout << "\t PORT:" << _port << std::endl;
 #endif
-        return STD_PARAM_ERROR;
+        return STD_ERROR_PARAM_ERROR;
     }
     Q_D(OEServer);
 
     if (d->connectSate_) {
-        return STD_NETWORK_CONNECTED;
+        return STD_ERROR_NETWORK_CONNECTED;
     }
 
     // try connect server
@@ -59,19 +57,19 @@ int OEServer::connect(const std::string& _ip, const int _port)
     d->ip_ = _ip;
     d->port_ = _port;
     d->connectSate_ = true;
-    return 0;
+    return OELIB_SUCCESS;
 }
 
 int OEServer::update(void)
 {
-    return 0;
+    return OELIB_SUCCESS;
 }
 
 int OEServer::disConnect(void)
 {
     Q_D(OEServer);
     d->connectSate_ = false;
-    return 0;
+    return OELIB_SUCCESS;
 }
 
 int OEServer::getVersion(void) const
@@ -80,15 +78,20 @@ int OEServer::getVersion(void) const
     return d->version_;
 }
 
-std::list<OEFile> OEServer::getAllFile(void)
+const std::list<OEFile> &OEServer::getAllFile(void)
 {
-//    Q_D(OEServer);
-    return {};//d->listFile_;
+    Q_D(OEServer);
+    return d->listFile_;
 }
 
 bool OEServer::operator ==(const OEClient &_ser) const
 {
-    return _ser.getVersion() == this->getVersion();
+    return (_ser.getVersion() == this->getVersion());
+}
+
+bool OEServer::operator !=(const OEClient &_ser) const
+{
+    return (_ser.getVersion() != this->getVersion());
 }
 
 }

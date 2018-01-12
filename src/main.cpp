@@ -11,7 +11,7 @@ int main(void) {
     OEServer s;
     u.setClient(&c);
     u.setServer(&s);
-    if (c == s) {
+    if (c != s) {
         std::cout << "is latest version." << std::endl;
     }
     else {

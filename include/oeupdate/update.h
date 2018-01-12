@@ -4,9 +4,10 @@
 #include "update_global.h"
 
 namespace oe {
-
+class OEUpdatePrivate;
 class OEServer;
 class OEClient;
+class OEFile;
 
 class OEUPDATESHARED_EXPORT OEUpdate
 {
@@ -15,23 +16,21 @@ public:
     OEUpdate();
 
 
+
+    virtual int update(void);
+
+    virtual int asynUpdate(void);
+
+public:
+
     int setServer(OEServer* _ser);
 
     int setClient(OEClient* _clt);
 
-    int update(void);
-
-    int asynUpdate(void);
-
-protected:
-
-
-
 private:
 
-    OEServer* server_;
-    OEClient* client_;
-
+    OEUpdatePrivate* d_ptr;
+    Q_DECLARE_PRIVATE(OEUpdate)
 };
 
 }
