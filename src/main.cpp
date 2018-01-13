@@ -8,6 +8,7 @@ using namespace oe;
 int main(void) {
     OEUpdate u;
     OEClient c;
+    c.update();
     OEServer s;
     u.setClient(&c);
     u.setServer(&s);

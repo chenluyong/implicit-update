@@ -47,10 +47,17 @@ SOURCES += \
     $$SrcPath/update.cpp \
     $$SrcPath/server.cpp \
     $$SrcPath/client.cpp \
-    $$SrcPath/main.cpp
+    $$SrcPath/main.cpp \
+    $$SrcPath/file.cpp \
+    $$SrcPath/downloader.cpp \
+    $$SrcPath/host.cpp
 
 HEADERS += \
     $$IncPath/update.h \
     $$IncPath/update_global.h \
     $$IncPath/server.h \
-    $$IncPath/client.h
+    $$IncPath/client.h \
+    $$IncPath/file.h \
+    $$IncPath/update_define.h \
+    $$IncPath/downloader.h \
+    $$IncPath/host.h

@@ -22,46 +22,46 @@ OEDownloader::OEDownloader(OEServer * const _server, OEClient * const _client)
     d_ptr->client_ = _client;
 }
 
-int OEDownloader::downloadFile(const OEFile &_file) {
+OEDownloader::DownloadReturn OEDownloader::downloadFile(const OEFile &_file) {
     if (!_file.isValid())
-        return STD_ERROR_PARAM_ERROR;
-
+        return DownloadReturn(InvalidType);
+    DownloadReturn ret = OK;
     switch (_file.getFileType()) {
     case OEFile::FTP:
-        downloadFileFromFtp(_file);
+        ret = downloadFileFromFtp(_file);
         break;
     case OEFile::HTTP:
-        downloadFileFromHttp(_file);
+        ret = downloadFileFromHttp(_file);
         break;
     case OEFile::LOCAL:
-        return STD_ERROR_NETWORK_DOWNLOAD_FILE;
+        ret = DownloadReturn(InvalidAddress);
     default:
-        return STD_ERROR_TYPE;
+        ret = DownloadReturn(InvalidType);
     }
 
-    return OELIB_SUCCESS;
+    return ret;
 }
 
-int OEDownloader::downloadDone(void) {
-    return OELIB_SUCCESS;
+OEDownloader::DownloadReturn OEDownloader::downloadDone(void) {
+    return DownloadReturn(OK);
 }
 
-int OEDownloader::downloadFileFromHttp(const OEFile &_file)
+OEDownloader::DownloadReturn OEDownloader::downloadFileFromHttp(const OEFile &_file)
 {
     const std::string& src_path = _file.getNetworkPath();
     if (src_path.empty())
-        return STD_ERROR_PARAM_ERROR;
+        return InvalidType;
 
-    return OELIB_SUCCESS;
+    return OK;
 }
 
-int OEDownloader::downloadFileFromFtp(const OEFile &_file)
+OEDownloader::DownloadReturn OEDownloader::downloadFileFromFtp(const OEFile &_file)
 {
     const std::string& src_path = _file.getNetworkPath();
     if (src_path.empty())
-        return STD_ERROR_PARAM_ERROR;
+        return InvalidType;
 
-    return OELIB_SUCCESS;
+    return OK;
 }
 
 

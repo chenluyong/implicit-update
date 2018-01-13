@@ -1,6 +1,9 @@
 #ifndef OELIB_UPDATE_DEFINE_H
 #define OELIB_UPDATE_DEFINE_H
 
+
+/// @brief : return code
+///
 #define OELIB_SUCCESS                   (0)         // success code
 #define OELIB_ERROR                     (-1)        // unknown error
 
@@ -14,6 +17,12 @@
 
 #define STD_ERROR_TYPE                  (1629)      // The datatype unqualified
 #define STD_ERROR_NETWORK_DOWNLOAD_FILE (1706)      // Not a valid download file.
+
+
+/// @brief : dll version
+#define OE_VERSION(a,b,c,d) ((a << 24) + (b << 16) + (c << 8) + d)
+
+#define OELIB_CALLBACK
 
 
 

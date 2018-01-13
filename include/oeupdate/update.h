@@ -13,7 +13,7 @@ class OEUPDATESHARED_EXPORT OEUpdate
 {
 
 public:
-    OEUpdate();
+    OEUpdate(OEServer* _ser = NULL, OEClient* _clt = NULL);
 
 
 

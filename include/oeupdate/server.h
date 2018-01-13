@@ -2,19 +2,19 @@
 #define OELIB_SERVER_H
 
 #include <iostream>
-#include <list>
+#include <vector>
 
 #include "update_global.h"
-
+#include "host.h"
 namespace oe {
 
 class OEFile;
 class OEClient;
 class OEServerPrivate;
-class OEUPDATESHARED_EXPORT OEServer
+class OEUPDATESHARED_EXPORT OEServer : public OEHost
 {
 public:
-    OEServer();
+    OEServer(void);
 
 
 
@@ -28,16 +28,6 @@ public:
     // attribute operate
 public:
 
-    int getVersion(void) const;
-
-    const std::list<OEFile> &getAllFile(void);
-
-
-
-public:
-
-    bool operator == (const OEClient&  _ser) const ;
-    bool operator != (const OEClient&  _ser) const ;
 
 private:
 

@@ -4,29 +4,31 @@ namespace oe {
 
 class OEFilePrivate {
 
-    OEFilePrivate(OEFile* _parent)
-        :q_ptr(_parent) {}
+    OEFilePrivate(OEFile* _parent, const std::string& _fileName, OEFile::Type _type)
+        :q_ptr(_parent),fileName_(_fileName), type_(_type) {}
 
     Q_DECLARE_PUBLIC(OEFile)
 
 private:
     class OEFile* q_ptr;
     std::string version_;
-    OEFile::Type type_;
     // file path (if the type is HTTP, the path is URL.)
     std::string path_;
     // download to local, in software relative path/filename.
     // example: res/logo.png
-    std::string fileName_;
+    const std::string fileName_;
+    // file type
+    OEFile::Type type_;
     // file MD5
     std::string code_;
 };
 
 
-OEFile::OEFile(void)
-    :d_ptr(new OEFilePrivate(this))
+OEFile::OEFile(const std::string &_fileName, OEFile::Type _type)
+    :d_ptr(new OEFilePrivate(this, _fileName, _type))
 {
 }
+
 
 bool OEFile::isValid(void) const
 {
@@ -53,7 +55,7 @@ const std::string &OEFile::getFileName(void) const
     return d->fileName_;
 }
 
-const std::string &OEFile::getNetworkPath() const
+const std::string &OEFile::getNetworkPath(void) const
 {
     const Q_D(OEFile);
     return d->path_;

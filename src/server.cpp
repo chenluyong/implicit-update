@@ -8,17 +8,15 @@ class OEServerPrivate {
         : q_ptr(_parent){
         ip_ = "127.0.0.1";
         port_ = 19940;
-        version_ = OE_VERSION(1,1,1,1);
     }
 public:
     Q_DECLARE_PUBLIC(OEServer)
     OEServer* const q_ptr;
 
 private:
-    std::list<OEFile> listFile_;
     std::string ip_;
-    int version_;
     int port_;
+    std::vector<OEFile> vecFile_;
     // with server connect status.
     bool connectSate_;
 };
@@ -72,26 +70,15 @@ int OEServer::disConnect(void)
     return OELIB_SUCCESS;
 }
 
-int OEServer::getVersion(void) const
-{
-    const Q_D(OEServer);
-    return d->version_;
-}
 
-const std::list<OEFile> &OEServer::getAllFile(void)
+int OEServer::getAllFile(std::vector<OEFile> & _vecFile)
 {
     Q_D(OEServer);
-    return d->listFile_;
-}
+    if (d->vecFile_.empty())
+        return OELIB_ERROR;
 
-bool OEServer::operator ==(const OEClient &_ser) const
-{
-    return (_ser.getVersion() == this->getVersion());
-}
-
-bool OEServer::operator !=(const OEClient &_ser) const
-{
-    return (_ser.getVersion() != this->getVersion());
+    _vecFile.assign(d->vecFile_.begin(),d->vecFile_.end());
+    return OELIB_SUCCESS;
 }
 
 }

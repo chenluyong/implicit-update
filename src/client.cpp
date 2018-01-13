@@ -1,4 +1,5 @@
 #include "client.h"
+#include <direct.h>
 #include <iostream>
 
 #include "server.h"
@@ -7,9 +8,8 @@ namespace oe {
 
 class OEClientPrivate {
 public:
-    OEClientPrivate(OEClient* const parent)
-        :q_ptr(parent) {
-        version_ = OE_VERSION(1,1,1,1);
+    OEClientPrivate(OEClient* const _parent)
+        :q_ptr(_parent) {
     }
 
     Q_DECLARE_PUBLIC(OEClient)
@@ -17,8 +17,7 @@ public:
 
 
 private:
-    std::list<OEFile> listFile_;
-    int version_;
+    std::string appPath_;
 };
 
 
@@ -28,38 +27,97 @@ OEClient::OEClient(void)
     // get current version
 }
 
-int OEClient::setVersion(int _version)
-{
-    Q_D(OEClient);
-    d->version_ = _version;
-    return OELIB_SUCCESS;
-}
-
-int OEClient::getVersion(void) const
-{
-    const OEClientPrivate* const d = d_func();
-    return d->version_;
-}
-
 int OEClient::update(void)
 {
+    //
+    Q_D(OEClient);
+
+    // get work dir
+    if (d->appPath_.empty()) {
+        char app[255] = {};
+        getcwd(app, sizeof(app));
+        d->appPath_ = app;
+    }
+
+    // up all file
+    updateLocalFileInfo();
+
+    // get app version
+
     return OELIB_SUCCESS;
 }
 
-const std::list<OEFile> &OEClient::getAllFile(void)
+int OEClient::traverseRoute(const std::string &_filePath,
+                            const _finddata32_t &_fileData)
 {
     Q_D(OEClient);
-    return d->listFile_;
+    std::string file_name =  _filePath + "\\" + _fileData.name;
+    size_t pos = _filePath.find(d->appPath_.c_str(),0);
+    if (pos == std::string::npos)
+        return -1;
+    file_name.erase(file_name.begin(), file_name.begin() + d->appPath_.length());
+
+    if (file_name.at(0) == '\\'
+        || file_name.at(0) == '/')
+        file_name.erase(file_name.begin());
+#if 0
+    std::cout << file_name << std::endl;
+#endif
+
+    OEFile file(file_name, OEFile::LOCAL);
+    addFile(file);
+
+    return 0;
 }
 
-bool OEClient::operator ==(const OEServer &_ser)
+int OEClient::updateLocalFileInfo()
 {
-    return (_ser.getVersion() == this->getVersion());
+    Q_D(OEClient);
+    // check app path
+    if (d->appPath_.empty()) {
+#ifdef _DEBUG
+        std::cerr << "app path can't be empty" << std::endl;
+#endif
+        return OELIB_ERROR;
+    }
+    // clear file info cache
+    setAllFile({});
+
+    return traverseDir(d->appPath_);
+
 }
 
-bool OEClient::operator !=(const OEServer &_ser)
+int OEClient::traverseDir(const std::string &_dir)
 {
-    return (_ser.getVersion() != this->getVersion());
+    std::string dir_new = _dir + "\\*.*";
+
+    intptr_t handle;
+    _finddata_t file_data;
+
+    handle = _findfirst(dir_new.c_str(), &file_data);
+    // check file
+    if (handle == -1)
+        return OELIB_ERROR;
+
+    do
+    {
+        if (file_data.attrib & _A_SUBDIR)
+        {
+            if (strcmp(file_data.name, ".") == 0 || strcmp(file_data.name, "..") == 0)
+                continue;
+
+            // add to directory "\\"
+            dir_new = _dir + '\\' + file_data.name;
+            traverseDir(dir_new);
+        }
+        else
+            traverseRoute(_dir, file_data);
+
+    } while (0 == _findnext(handle, &file_data));
+
+
+    _findclose(handle);
+    return 0;
 }
 
 }

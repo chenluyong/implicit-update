@@ -1,9 +1,14 @@
 #ifndef OELIB_CLIENT_H
 #define OELIB_CLIENT_H
 
-#include <list>
+
+#include <vector>
+#include <string>
 
 #include "update_global.h"
+#include "host.h"
+// io.h
+struct _finddata32_t;
 
 namespace oe {
 
@@ -12,29 +17,33 @@ class OEClientPrivate;
 class OEFile;
 
 
-class OEUPDATESHARED_EXPORT OEClient
+class OEUPDATESHARED_EXPORT OEClient : public OEHost
 {
 public:
     OEClient(void);
 
 
-    virtual int update(void);
+    int update(void);
+
+protected:
 
 
-public:
-    int setVersion(int _version);
+    /// @brief : update local file information
+    /// @remark: After the operation, you will have
+    ///          the latest local file information.
+    ///          `getAllFile` will be influenced.
+    int updateLocalFileInfo(void);
 
-    int getVersion(void) const;
+private:
 
-    const std::list<OEFile> &getAllFile(void);
+    int traverseDir(const std::string &_dir);
+    /// @brief : `traverseDir` call `traverseRoute`
+    /// @param : _filePath file abs path
+    /// @param : _fileData file information
+    /// @remark:
+    int OELIB_CALLBACK traverseRoute(const std::string &_filePath,
+                                             const _finddata32_t &_fileData);
 
-
-
-
-public:
-
-    bool operator == (const OEServer&  _ser);
-    bool operator != (const OEServer&  _ser);
 
 private:
     friend class OEServer;

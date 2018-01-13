@@ -16,7 +16,7 @@ public:
         LOCAL=2
     };
 
-    OEFile(void);
+    OEFile(const std::string &_fileName, Type _type);
 
     // check file
     bool isValid(void) const;

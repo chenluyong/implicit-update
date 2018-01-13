@@ -22,9 +22,12 @@ private:
     OEClient* client_;
 };
 
-OEUpdate::OEUpdate(void)
+OEUpdate::OEUpdate(OEServer *_ser, OEClient *_clt)
     :d_ptr(new OEUpdatePrivate(this))
 {
+    Q_D(OEUpdate);
+    d->server_ = _ser;
+    d->client_ = _clt;
 }
 
 int OEUpdate::setServer(OEServer *_server)
@@ -44,8 +47,8 @@ int OEUpdate::setClient(OEClient *_client)
 int OEUpdate::update(void)
 {
     Q_D(OEUpdate);
-    if (d->client_ == nullptr
-        || nullptr == d->server_) {
+    if (d->client_ == NULL
+        || NULL == d->server_) {
 #ifdef _DEBUG
         std::cout << "No server or client is set." << std::endl;
 #endif
@@ -68,41 +71,50 @@ int OEUpdate::update(void)
 
 
     // get download file
-    std::list<OEFile> sev_list_file = d->server_->getAllFile();
-    std::list<OEFile> clt_list_file = d->client_->getAllFile();
-    std::list<OEFile> download_file;
+    std::vector<OEFile> sev_vec_file, clt_vec_file, download_file;
+    d->server_->getAllFile(sev_vec_file);
+    d->client_->getAllFile(clt_vec_file);
 
     // compare file
-    for (auto sev_file : sev_list_file) {
-        for (auto clt_file : clt_list_file) {
-            if (sev_file == clt_file) {
-                if (sev_file.getCode() != clt_file.getCode())
+    int clt_file_size = 0;
+    for (auto sev_file : sev_vec_file) {
+        clt_file_size = clt_vec_file.size();
+        for (int i = 0; i < clt_file_size; ++i) {
+            if (sev_file == clt_vec_file.at(i)) {
+                // check file
+                if (sev_file.getCode() != clt_vec_file.at(i).getCode())
                     download_file.push_back(sev_file);
+                // erase clt_file
+                clt_vec_file.erase(clt_vec_file.begin()+i);
                 break;
             }
         }
     }
 
     // begin download file to local
-    int ret = 0;
+    OEDownloader::DownloadReturn ret = OEDownloader::OK;
     OEDownloader downloader(d->server_, d->client_);
     for (auto file : download_file) {
         ret = downloader.downloadFile(file);
-        if (0 != ret) {
+        if (ret.status != OEDownloader::OK) {
 #ifdef _DEBUG
-            std::cout << "Download exception, error code:" << ret << std::endl;
+            std::cout << "Download exception, error code:" << ret.status << std::endl;
 #endif
         }
     }
 
-    return downloader.downloadDone();
+    if (OEDownloader::OK != downloader.downloadDone().status) {
+        return OELIB_ERROR;
+    }
+
+    return OELIB_SUCCESS;
 }
 
 int OEUpdate::asynUpdate(void)
 {
     Q_D(OEUpdate);
-    if (d->client_ == nullptr
-        || nullptr == d->server_) {
+    if (d->client_ == NULL
+        || NULL == d->server_) {
 #ifdef _DEBUG
         std::cout << "No server or client is set." << std::endl;
 #endif
