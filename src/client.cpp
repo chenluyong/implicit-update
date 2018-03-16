@@ -54,20 +54,20 @@ int OEClient::traverseRoute(const std::string &_filePath,
     std::string file_name =  _filePath + "\\" + _fileData.name;
     size_t pos = _filePath.find(d->appPath_.c_str(),0);
     if (pos == std::string::npos)
-        return -1;
+        return OELIB_ERROR;
     file_name.erase(file_name.begin(), file_name.begin() + d->appPath_.length());
 
     if (file_name.at(0) == '\\'
         || file_name.at(0) == '/')
         file_name.erase(file_name.begin());
 #if OELIB_DEBUG < 2
-    std::cout << file_name << std::endl;
+    std::cout << file_name.c_str() << std::endl;
 #endif
 
     OEFile file(file_name, OEFile::LOCAL);
     addFile(file);
 
-    return 0;
+    return OELIB_SUCCESS;
 }
 
 int OEClient::updateLocalFileInfo()
@@ -117,7 +117,7 @@ int OEClient::traverseDir(const std::string &_dir)
 
 
     _findclose(handle);
-    return 0;
+    return OELIB_SUCCESS;
 }
 
 }
