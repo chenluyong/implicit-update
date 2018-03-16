@@ -49,14 +49,14 @@ int OEUpdate::update(void)
     Q_D(OEUpdate);
     if (d->client_ == NULL
         || NULL == d->server_) {
-#ifdef _DEBUG
+#if defined(_DEBUG) || OELIB_DEBUG < 3
         std::cout << "No server or client is set." << std::endl;
 #endif
         return STD_ERROR_PARAM_ERROR;
     }
     // check server availability
     if (0 != d->server_->connect()) {
-#ifdef _DEBUG
+#if defined(_DEBUG) || OELIB_DEBUG < 3
         std::cout << "server connect failed." << std::endl;
 #endif
     }
@@ -72,8 +72,8 @@ int OEUpdate::update(void)
 
     // get download file
     std::vector<OEFile> sev_vec_file, clt_vec_file, download_file;
-    d->server_->getAllFile(sev_vec_file);
-    d->client_->getAllFile(clt_vec_file);
+    d->server_->getAllFile(&sev_vec_file);
+    d->client_->getAllFile(&clt_vec_file);
 
     // compare file
     int clt_file_size = 0;
@@ -97,7 +97,7 @@ int OEUpdate::update(void)
     for (auto file : download_file) {
         ret = downloader.downloadFile(file);
         if (ret.status != OEDownloader::OK) {
-#ifdef _DEBUG
+#if defined(_DEBUG)
             std::cout << "Download exception, error code:" << ret.status << std::endl;
 #endif
         }
@@ -115,7 +115,7 @@ int OEUpdate::asynUpdate(void)
     Q_D(OEUpdate);
     if (d->client_ == NULL
         || NULL == d->server_) {
-#ifdef _DEBUG
+#if defined(_DEBUG)
         std::cout << "No server or client is set." << std::endl;
 #endif
         return STD_ERROR_PARAM_ERROR;

@@ -35,13 +35,13 @@ void OEHost::setAllFile(const std::vector<OEFile> &_vecFile)
     d->vecFile_.assign(_vecFile.begin(),_vecFile.end());
 }
 
-int OEHost::getAllFile(std::vector<OEFile> &_vecFile)
+int OEHost::getAllFile(std::vector<OEFile> * const _vecFile)
 {
     Q_D(OEHost);
     if (d->vecFile_.empty())
         return OELIB_ERROR;
 
-    _vecFile.assign(d->vecFile_.begin(),d->vecFile_.end());
+    _vecFile->assign(d->vecFile_.begin(),d->vecFile_.end());
     return OELIB_SUCCESS;
 }
 

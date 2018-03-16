@@ -33,7 +33,7 @@ int OEServer::connect(const std::string& _ip, const int _port)
 {
     if ((_ip.empty() && (_port != 0))
             || (!_ip.empty() && (_port == 0))) {
-#ifdef _DEBUG
+#if defined(_DEBUG) || OELIB_DEBUG < 3
         std::cout << "check params error" << std::endl;
         std::cout << "\t  IP :" << _ip.c_str() << std::endl;
         std::cout << "\t PORT:" << _port << std::endl;
@@ -71,13 +71,13 @@ int OEServer::disConnect(void)
 }
 
 
-int OEServer::getAllFile(std::vector<OEFile> & _vecFile)
+int OEServer::getAllFile(std::vector<OEFile>* _vecFile)
 {
     Q_D(OEServer);
     if (d->vecFile_.empty())
         return OELIB_ERROR;
 
-    _vecFile.assign(d->vecFile_.begin(),d->vecFile_.end());
+    _vecFile->assign(d->vecFile_.begin(),d->vecFile_.end());
     return OELIB_SUCCESS;
 }
 

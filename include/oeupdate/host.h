@@ -16,7 +16,7 @@ public:
     int getVersion(void) const;
 
 
-    int getAllFile(std::vector<OEFile> & _vecFile);
+    int getAllFile(std::vector<OEFile>* const _vecFile);
 
 protected:
 

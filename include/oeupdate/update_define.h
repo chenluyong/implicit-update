@@ -24,6 +24,7 @@
 
 #define OELIB_CALLBACK
 
+#define OELIB_DEBUG (5)
 
 
 #endif // OELIB_UPDATE_DEFINE_H

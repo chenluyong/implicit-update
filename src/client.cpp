@@ -60,7 +60,7 @@ int OEClient::traverseRoute(const std::string &_filePath,
     if (file_name.at(0) == '\\'
         || file_name.at(0) == '/')
         file_name.erase(file_name.begin());
-#if 0
+#if OELIB_DEBUG < 2
     std::cout << file_name << std::endl;
 #endif
 
@@ -75,7 +75,7 @@ int OEClient::updateLocalFileInfo()
     Q_D(OEClient);
     // check app path
     if (d->appPath_.empty()) {
-#ifdef _DEBUG
+#if defined(_DEBUG) || OELIB_DEBUG < 5
         std::cerr << "app path can't be empty" << std::endl;
 #endif
         return OELIB_ERROR;

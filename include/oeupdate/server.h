@@ -25,6 +25,8 @@ public:
 
     virtual int disConnect(void);
 
+    int getAllFile(std::vector<OEFile> *_vecFile);
+
     // attribute operate
 public:
 
